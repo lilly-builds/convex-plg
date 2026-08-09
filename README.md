@@ -21,3 +21,14 @@ The source specifications remain in the separate research-notes folder:
 - [V1 General Specification](../convex/v1%20general%20spec.md)
 - [V1 Decision Policy and Data Contract](../convex/v1%20decision%20policy%20and%20data%20contract.md)
 - [Data Access Discovery Brief](../convex/data%20access%20discovery%20brief.md)
+
+## Run the synthetic sandbox
+
+```sh
+npm install
+npm test
+```
+
+That runs all 15 declared policy fixtures plus duplicate-race, simulated outage/retry, policy-update, recipient-snapshot, and 10× workload controls. For the local Convex dogfood path (still test-only), run `npx convex dev --once`, then seed `reviews:seedSyntheticFixture` with a fixture ID such as `P1`. Use `reviews:getCandidateDetails` to inspect the stored candidate, sanitized evidence, and delivery targets.
+
+The delivery action records only `simulated_test_outage` or `succeeded`; it makes no Slack, email, or other network delivery.
