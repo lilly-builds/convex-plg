@@ -57,6 +57,39 @@ describe("synthetic sandbox acceptance controls", () => {
   });
 });
 
+
+it("E6 upgrades an open Emerging case to the direct route without a second case", async () => {
+  const sandbox = new SyntheticSandbox();
+  await sandbox.apply(fixtureById("E1"));
+  await sandbox.apply(fixtureById("E6"));
+  const candidate = sandbox.candidates.get("C-T-emerging-team_review");
+  expect(sandbox.candidates.size).toBe(1);
+  expect(candidate).toMatchObject({ route: "direct", ownerId: "user:dx-owner", recommendation: "Assign technical response" });
+  expect([...sandbox.targets.values()].filter((target) => target.status === "pending").map((target) => target.recipientId).sort()).toEqual(["user:dx-owner", "user:marketing-owner"]);
+  expect([...sandbox.targets.values()].filter((target) => target.status === "pending").every((target) => target.urgent)).toBe(true);
+  expect([...sandbox.targets.values()].filter((target) => target.status === "superseded")).toHaveLength(1);
+});
+
+it("E8 records Observe without starting an external delivery", async () => {
+  const sandbox = new SyntheticSandbox();
+  await sandbox.apply(fixtureById("E8"));
+  expect(sandbox.recordObserve("C-T-emerging-observe-team_review", "user:product-marketer", "Watch for an urgent moment")).toEqual({ recorded: true });
+  expect(sandbox.candidates.get("C-T-emerging-observe-team_review")).toMatchObject({ route: "emerging" });
+  expect(sandbox.decisions).toEqual([{ candidateId: "C-T-emerging-observe-team_review", actorId: "user:product-marketer", decision: "observe", reason: "Watch for an urgent moment" }]);
+  expect(sandbox.attempts).toHaveLength(0);
+  expect([...sandbox.targets.values()].every((target) => target.status === "pending")).toBe(true);
+});
+
+it("E9 keeps the emerging recipient snapshot after configuration changes", async () => {
+  const sandbox = new SyntheticSandbox();
+  const first = fixtureById("E9");
+  await sandbox.apply(first);
+  const changed = { ...first, recipientPolicies: [{ id: "RP-emerging-v2", version: "2", route: "emerging" as const, recipients: [{ id: "user:new-product-owner", role: "owner" as const, channel: "slack" as const }] }] };
+  await sandbox.apply(changed);
+  expect(sandbox.candidates.get("C-T-emerging-config-team_review")?.ownerId).toBe("user:product-marketer");
+  expect([...sandbox.targets.values()].map((target) => target.recipientId)).toEqual(["user:product-marketer", "user:marketing-owner"]);
+});
+
 it("upgrades P1 to P3 on the same candidate, switches to the DX owner, and supersedes old unsent targets", async () => {
   const sandbox = new SyntheticSandbox();
   await sandbox.apply(fixtureById("P1")); await sandbox.apply(fixtureById("P3"));
