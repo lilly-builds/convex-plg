@@ -4,3 +4,8 @@ node_modules/
 .convex/
 coverage/
 dist/
+
+dist/
+*.tsbuildinfo
+src/*.js
+test/*.js

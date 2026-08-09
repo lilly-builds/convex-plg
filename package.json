@@ -6,14 +6,22 @@
   "scripts": {
     "check": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
     "typescript": "^5.0.0",
-    "vitest": "^4.0.0"
+    "vitest": "^4.0.0",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "vite": "latest"
   },
   "dependencies": {
-    "convex": "^1.43.0"
+    "convex": "1.43.0",
+    "react": "latest",
+    "react-dom": "latest"
   }
 }

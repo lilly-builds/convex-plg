@@ -37,14 +37,14 @@ describe("synthetic sandbox acceptance controls", () => {
   it("F10 updates evidence version without a second candidate or delivery targets", async () => {
     const sandbox = new SyntheticSandbox(); await sandbox.apply(fixtureById("P1")); await sandbox.apply(fixtureById("F10"));
     expect(sandbox.candidates.size).toBe(1); expect(sandbox.targets.size).toBe(2);
-    expect(sandbox.candidates.get("C-T-serious-serious_team_review")?.policyVersion).toBe("0.3");
+    expect(sandbox.candidates.get("C-T-serious-team_review")?.policyVersion).toBe("0.3");
   });
 
   it("F12 keeps the original recipient snapshot when config changes after creation", async () => {
     const sandbox = new SyntheticSandbox(); const first = fixtureById("F12"); await sandbox.apply(first);
     const changed = { ...first, recipientPolicies: [{ ...first.recipientPolicies[0]!, version: "2", recipients: [{ id: "user:new-owner", role: "owner" as const, channel: "email" as const }] }] };
     await sandbox.apply(changed);
-    expect(sandbox.candidates.get("C-T-config-serious_team_review")?.ownerId).toBe("user:marketing-owner");
+    expect(sandbox.candidates.get("C-T-config-team_review")?.ownerId).toBe("user:marketing-owner");
     expect([...sandbox.targets.values()].map((target) => target.recipientId)).toEqual(["user:marketing-owner", "user:product-marketer"]);
   });
 
@@ -60,7 +60,7 @@ describe("synthetic sandbox acceptance controls", () => {
 it("upgrades P1 to P3 on the same candidate, switches to the DX owner, and supersedes old unsent targets", async () => {
   const sandbox = new SyntheticSandbox();
   await sandbox.apply(fixtureById("P1")); await sandbox.apply(fixtureById("P3"));
-  const candidate = sandbox.candidates.get("C-T-serious-serious_team_review");
+  const candidate = sandbox.candidates.get("C-T-serious-team_review");
   expect(candidate).toMatchObject({ route: "both", ownerId: "user:dx-owner", recommendation: "Assign technical response" });
   expect([...sandbox.targets.values()].filter((target) => target.status === "pending").map((target) => target.recipientId)).toEqual(["user:dx-owner", "user:marketing-owner"]);
   expect([...sandbox.targets.values()].filter((target) => target.status === "superseded")).toHaveLength(2);

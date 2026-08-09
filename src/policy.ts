@@ -63,10 +63,10 @@ function directQualifies(records: SourceRecords, at: string): boolean {
   return records.requests.some((request) => request.requestState === "open" && request.inboundOrAuthorized && accepted.has(request.requestType) && time(request.requestAt) >= daysBetween(at, 14));
 }
 function policyFor(route: Route, policies: readonly RecipientPolicy[]): RecipientPolicy | null {
-  return policies.find((p) => p.route === (route === "pressure" ? "pressure" : "direct")) ?? null;
+  return policies.find((p) => p.route === (route === "both" ? "direct" : route)) ?? null;
 }
 function targetId(candidateId: string, recipientId: string, role: "owner" | "collaborator", channel: "slack" | "email"): string {
-  const short = recipientId === "user:dx-owner" ? "dx" : recipientId === "user:marketing-owner" && role === "owner" ? "owner" : recipientId === "user:product-marketer" ? "collaborator" : recipientId === "user:marketing-owner" ? "marketing" : recipientId.replace(/[^a-zA-Z0-9]+/g, "-");
+  const short = recipientId === "user:dx-owner" ? "dx" : recipientId === "user:marketing-owner" && role === "owner" ? "owner" : recipientId === "user:product-marketer" && role === "owner" ? "owner" : recipientId === "user:product-marketer" ? "collaborator" : recipientId === "user:marketing-owner" ? "marketing" : recipientId.replace(/[^a-zA-Z0-9]+/g, "-");
   return `DT-${candidateId}-${short}-${channel}`;
 }
 export function evaluateFixture(fixture: Fixture): Evaluation {
@@ -75,15 +75,15 @@ export function evaluateFixture(fixture: Fixture): Evaluation {
   const common = commonGateFailure(fixture.records, at); if (common) return { status: "hold", reason: common };
   const snapshots = validSnapshots(fixture.records, at);
   const pressure = pressureQualifies(snapshots); const direct = directQualifies(fixture.records, at);
-  if (!pressure && !direct) return { status: "hold", reason: "commercial_moment_failed" };
-  const route: Route = pressure && direct ? "both" : pressure ? "pressure" : "direct";
+  if (!pressure && !direct && fixture.policyKind !== "emerging") return { status: "hold", reason: "commercial_moment_failed" };
+  const route: Route = pressure && direct ? "both" : pressure ? "pressure" : direct ? "direct" : "emerging";
   const policy = policyFor(route, fixture.recipientPolicies);
-  const candidateId = `C-${fixture.records.teamId}-${POLICY_ID}`;
+  const candidateId = `C-${fixture.records.teamId}-team_review`;
   const owner = policy?.recipients.find((recipient) => recipient.role === "owner");
   const validRecipients = policy?.recipients.filter((recipient): recipient is typeof recipient & { channel: "slack" | "email" } => recipient.channel === "slack" || recipient.channel === "email") ?? [];
   const deliveryBlocked = !policy || !owner?.channel || validRecipients.length !== policy.recipients.length;
   const candidate: Candidate = { id: candidateId, teamId: fixture.records.teamId, teamDisplayName: fixture.records.teamDisplayName!, route,
-    recommendation: direct ? "Assign technical response" : "Review commercial play", ownerId: owner?.id ?? null, policyVersion: fixture.policyVersion,
+    recommendation: direct ? "Assign technical response" : pressure ? "Review commercial play" : "Observe", ownerId: owner?.id ?? null, policyVersion: fixture.policyVersion,
     recipientPolicyId: policy?.id ?? "missing", recipientPolicyVersion: policy?.version ?? "missing", deliveryState: deliveryBlocked ? "delivery_blocked" : "ready" };
   const targets: DeliveryTarget[] = deliveryBlocked ? [] : validRecipients.map((recipient) => ({ id: targetId(candidateId, recipient.id, recipient.role, recipient.channel), candidateId, recipientId: recipient.id, channel: recipient.channel, urgent: direct }));
   return { status: "candidate", candidate, targets };

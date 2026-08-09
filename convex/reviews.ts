@@ -4,7 +4,7 @@ import { internal } from "./_generated/api";
 import { fixtureById } from "../src/fixtures";
 import { evaluateFixture } from "../src/policy";
 
-const POLICY_ID = "serious_team_review";
+const POLICY_ID = "team_review";
 function requireSyntheticSandbox() { if (process.env.SYNTHETIC_SANDBOX !== "enabled") throw new Error("Synthetic sandbox is disabled"); }
 function evidence(fixture: ReturnType<typeof fixtureById>) {
   const { records } = fixture; const common = { externalTeamId: records.teamId, fixtureId: fixture.id, ingestedAt: fixture.evaluationAt, identityConfidence: records.identityConfidence, policyVersion: fixture.policyVersion };
