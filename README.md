@@ -29,6 +29,18 @@ npm install
 npm test
 ```
 
-That runs all 15 declared policy fixtures plus duplicate-race, simulated outage/retry, policy-update, recipient-snapshot, and 10× workload controls. For the local Convex dogfood path (still test-only), run `npx convex dev --once`, then seed `reviews:seedSyntheticFixture` with a fixture ID such as `P1`. Use `reviews:getCandidateDetails` to inspect the stored candidate, sanitized evidence, and delivery targets.
+That runs the in-memory policy controls. For the actual local Convex path, start the local backend with `npx convex dev`, then run:
 
-The delivery action records only `simulated_test_outage` or `succeeded`; it makes no Slack, email, or other network delivery.
+```sh
+npm run verify:local
+```
+
+The runner writes only tagged synthetic test records and keeps them out of the demo queue. It verifies all 24 P/F/E fixtures plus route upgrades, Observe feedback, recipient snapshot stability, a five-way duplicate race, simulated outage/recovery, and a 10× workload through the local Convex database. Its final JSON output includes a run ID you can use when reviewing the terminal output.
+
+To inspect the data the UI reads, use:
+
+```sh
+npx convex run reviews:listCandidates '{}'
+```
+
+To inspect one returned team case in full, pass its candidate ID to `reviews:getCandidateDetails`. The delivery action records only `simulated_test_outage` or `succeeded`; it makes no Slack, email, or other network delivery.
