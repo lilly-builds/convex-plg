@@ -9,3 +9,10 @@ dist/
 *.tsbuildinfo
 src/*.js
 test/*.js
+
+# Local coding-agent setup is useful on the author's machine but is not part
+# of the public product repository.
+.agents/
+.claude/
+skills-lock.json
+convex/_generated/ai/ai-files.state.json

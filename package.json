@@ -10,7 +10,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "verify:local": "node scripts/verify-local-fixtures.mjs"
+    "verify:local": "node scripts/verify-local-fixtures.mjs",
+    "verify:demo-reset": "node scripts/verify-demo-reset.mjs"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

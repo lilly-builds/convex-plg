@@ -10,17 +10,13 @@ A synthetic-sandbox build of the V1 Serious-Team Review policy. It deliberately 
 
 **Real entry path:** Load one fixture → normalize/evaluate → persist candidate and recipient delivery targets → test-only delivery attempt → query the candidate/evidence/attempt state.
 
-**Required proof:** All 15 policy fixtures, duplicate race, simulated delivery outage/recovery, and a 10× workload. Tests must prove candidate, owner, target, and attempt outputs; later, the Convex path must prove the same behavior through the actual backend.
+**Required proof:** All 24 policy fixtures, duplicate race, simulated delivery outage/recovery, and a 10× workload. Tests must prove candidate, owner, target, and attempt outputs; later, the Convex path must prove the same behavior through the actual backend.
 
 **Approved exclusions:** real customer data; customer app/end-user data; secrets; production project; live Slack/email/outreach; any claim of cross-customer internal access.
 
 ## Source specifications
 
-The source specifications remain in the separate research-notes folder:
-
-- [V1 General Specification](../convex/v1%20general%20spec.md)
-- [V1 Decision Policy and Data Contract](../convex/v1%20decision%20policy%20and%20data%20contract.md)
-- [Data Access Discovery Brief](../convex/data%20access%20discovery%20brief.md)
+The V1 General Specification, V1 Decision Policy and Data Contract, and Data Access Discovery Brief remain in the author’s separate research-notes folder and are not included in this repository. The important boundaries are summarized above; external readers should receive those documents separately if needed.
 
 ## Run the synthetic sandbox
 
@@ -29,13 +25,38 @@ npm install
 npm test
 ```
 
-That runs the in-memory policy controls. For the actual local Convex path, start the local backend with `npx convex dev`, then run:
+That runs the in-memory policy controls. For the app and actual local Convex path, use two terminals:
+
+```sh
+# Terminal 1: local Convex backend and function watcher
+npx convex dev
+
+# Terminal 2: Vite app
+npm run dev
+```
+
+With the local backend running, run the persisted verification in a third terminal:
 
 ```sh
 npm run verify:local
 ```
 
 The runner writes only tagged synthetic test records and keeps them out of the demo queue. It verifies all 24 P/F/E fixtures plus route upgrades, Observe feedback, recipient snapshot stability, a five-way duplicate race, simulated outage/recovery, and a 10× workload through the local Convex database. Its final JSON output includes a run ID you can use when reviewing the terminal output.
+
+To reset the visible demo safely to its documented empty baseline, run:
+
+```sh
+npm run verify:demo-reset
+```
+
+The app's demo seed path writes only records labelled `demo:default`; the reset deletes only that allowlisted label and rejects other scopes. It is safe to run twice. Tagged verification runs (`test:<run>`) are intentionally preserved, and the reset does not clear unrelated local data.
+
+## Portfolio artifact status
+
+- Video: not yet recorded.
+- Screenshots/GIF: capture plan prepared in `docs/screenshot-plan.md`; captures are not included yet.
+- Convex dashboard: local backend and synthetic tables confirmed; account/dashboard proof is not confirmed.
+- Demo storyboard and introduction: prepared in `docs/demo-storyboard.md` and `docs/portfolio-introduction.md`.
 
 To inspect the data the UI reads, use:
 

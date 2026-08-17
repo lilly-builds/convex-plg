@@ -6,3 +6,14 @@
 @keyframes pulse{50%{transform:scale(1.8);opacity:.45}}@keyframes queue-wash{to{background-position:100% 0}}@keyframes scan{0%{transform:translateX(-70%);opacity:.2}50%{opacity:1}100%{transform:translateX(70%);opacity:.2}}@keyframes queue-row-in{from{opacity:0;transform:translateY(18px) scale(.985);filter:blur(3px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}@media(max-width:1000px){.workspace{grid-template-columns:1fr}.header-stats{display:none}.scenario-actions{grid-template-columns:1fr 1fr}}@media(max-width:800px){.hero h1{font-size:42px;white-space:normal}.table-row{grid-template-columns:1fr;gap:7px}.table-label,.hint{display:none}.actions{grid-column:auto}.detail{padding:22px}.detail h2{font-size:34px}.decision-evidence article{grid-template-columns:1fr}.delivery-cards{grid-template-columns:1fr}.scenario-actions{grid-template-columns:1fr}}@media(prefers-reduced-motion:reduce){.queue-transition,.scan-line,.queue-revealing .table-row.clickable{animation:none}}
 
 .table-row .actions{grid-column:auto;display:grid;grid-template-columns:1fr;align-self:stretch;gap:6px;padding:0;border-top:0}.table-row .actions button{width:100%;padding:8px 9px;font-size:11px}.table-row .actions::before{display:none}@media(max-width:800px){.table-row .actions{grid-column:auto;width:100%}}
+
+/* Reviewer-first refinements: keep the next action and safety boundary legible at a glance. */
+.sandbox-note{max-width:34ch;font-size:12px!important;color:#d1c6bd!important}
+.decision-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
+.decision-brief>.decision-actions button{margin-top:0}
+.decision-brief>.decision-actions .primary{border-color:#eb602f;background:#eb602f;color:#fff}
+.delivery-note{margin:0 0 12px!important;color:#d5a17d!important;font:11px 'DM Mono';}
+button:focus-visible,summary:focus-visible,.clickable:focus-visible{outline:2px solid #f4b18a;outline-offset:3px}
+.clickable{outline:none}
+@media(max-width:1100px){.table-row{grid-template-columns:1fr 1fr;gap:12px 20px}.table-label{display:none}.table-row .actions{grid-column:1/-1;grid-template-columns:1fr 1fr}.table-row .actions button{width:auto}}
+@media(max-width:560px){.app{padding-left:14px;padding-right:14px}.hero{padding-top:16px}.hero h1{font-size:38px}.queue-head{padding:18px}.queue h2,.playground h2{font-size:23px}.table-row{grid-template-columns:1fr;padding:16px 18px}.table-row .actions{grid-template-columns:1fr}.detail{padding:18px}.detail h2{font-size:32px}.decision-actions{display:grid;grid-template-columns:1fr}.decision-brief>.decision-actions button{width:100%}.delivery-heading{align-items:start;gap:10px;flex-direction:column}.delivery-cards article>div{align-items:flex-start;flex-direction:column}.channel{align-self:flex-start}}
