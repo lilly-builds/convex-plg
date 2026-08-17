@@ -12,3 +12,5 @@ The current package also includes a desktop set with four simultaneous queue cas
 Optional GIF: queue overview → Sandbox option 1 → open review → Sandbox option 3 → updated same-team review.
 
 Do not include credentials, deployment identifiers, customer data, local database contents, or claims that a message was sent. Dashboard imagery is optional and should only be captured after the dashboard connection is independently confirmed.
+
+An animated desktop proof is available at `docs/media/gif/convex-plg-ship-it.gif`. It cycles through the multi-team queue, pressure review, upgraded queue, and delivery preview.
