@@ -16,3 +16,8 @@ test/*.js
 .claude/
 skills-lock.json
 convex/_generated/ai/ai-files.state.json
+
+# Temporary local capture attempts; the reviewed proof package lives under docs/media.
+/artifacts/
+/artifacts2/
+/artifacts3/

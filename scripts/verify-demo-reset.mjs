@@ -6,6 +6,9 @@ const query = (name, args) => client.query(name, args);
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 const zeroCounts = (state) => Object.values(state.counts).every((count) => count === 0);
 
+// Establish the documented empty baseline first so this proof is repeatable
+// even when a previous demo capture left labelled records behind.
+await call("reviews:resetDemo", { scope: "default" });
 const demo = await call("reviews:seedSyntheticFixture", { fixtureId: "P1" });
 await call("reviews:recordDecision", { candidateId: demo.candidateId, actorId: "user:demo-owner", decision: "not_now", reason: "Reset verification" });
 const sentinelTag = `reset-sentinel-${Date.now()}`;
