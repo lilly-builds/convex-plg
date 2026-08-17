@@ -7,6 +7,8 @@ Capture 2–4 sanitized images after resetting the demo:
 3. **Threshold upgrade:** same team after Sandbox option 3, with changed route and owner.
 4. **Delivery preview:** response brief and “Delivery preview · Test only” cards.
 
+The current package also includes a desktop set with four simultaneous queue cases under `docs/media/desktop/`, which is the preferred set for portfolio review.
+
 Optional GIF: queue overview → Sandbox option 1 → open review → Sandbox option 3 → updated same-team review.
 
 Do not include credentials, deployment identifiers, customer data, local database contents, or claims that a message was sent. Dashboard imagery is optional and should only be captured after the dashboard connection is independently confirmed.
