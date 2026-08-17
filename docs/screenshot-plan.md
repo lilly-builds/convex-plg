@@ -14,3 +14,5 @@ Optional GIF: queue overview → Sandbox option 1 → open review → Sandbox op
 Do not include credentials, deployment identifiers, customer data, local database contents, or claims that a message was sent. Dashboard imagery is optional and should only be captured after the dashboard connection is independently confirmed.
 
 An animated desktop proof is available at `docs/media/gif/convex-plg-ship-it.gif`. It cycles through the multi-team queue, pressure review, upgraded queue, and delivery preview.
+
+The primary captioned portfolio demo is `docs/media/video/convex-plg-premium-demo.mp4`. It follows one account from sustained product use to higher buying intent, owner routing, and a response preview that does not send anything.
