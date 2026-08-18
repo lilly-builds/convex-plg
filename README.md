@@ -2,9 +2,7 @@
 
 ## A product-led growth decision tool for Convex
 
-[![Watch the product walkthrough](docs/media/gif/convex-plg-ship-it.gif)](docs/media/video/convex-plg-premium-demo.mp4)
-
-**[Watch the walkthrough](docs/media/video/convex-plg-premium-demo.mp4)**
+![Product walkthrough: a team review moves from evidence to a prepared customer response](docs/media/gif/convex-plg-walkthrough.gif)
 
 ## The promise
 
