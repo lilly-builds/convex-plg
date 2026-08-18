@@ -53,7 +53,7 @@ The app's demo seed path writes only records labelled `demo:default`; the reset 
 
 ## Portfolio artifact status
 
-- Primary portfolio demo: `docs/media/video/convex-plg-premium-demo.mp4` (captioned, 52 seconds, synthetic data only).
+- Primary portfolio demo: `docs/media/video/convex-plg-premium-demo.mp4` (captioned, 48 seconds, high-bitrate Full HD, synthetic data only).
 - Backup interaction proof: `docs/media/video/convex-plg-proof.webm`. A narrated 2–3 minute walkthrough has not been recorded.
 - Screenshots/GIF: six sanitized screenshots captured in `docs/media/screenshots/`; a polished GIF is still optional.
 - Convex dashboard: local backend and synthetic tables confirmed; account/dashboard proof is not confirmed.
