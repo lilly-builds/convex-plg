@@ -1,68 +1,136 @@
-# Convex Product-Led Growth Signal Finder
+# Convex Product-Led Growth Signal Review
 
-A synthetic-sandbox build of the V1 Serious-Team Review policy. It deliberately uses fake, named teams and test-only delivery; it does not read customer data or send real Slack/email messages.
+> A small, explainable decision system for turning team-level product signals into the next **human** response — without pretending that a score, a dashboard, or an automated message is a relationship.
 
-## Build contract
+[![Watch the product walkthrough](docs/media/gif/convex-plg-ship-it.gif)](docs/media/video/convex-plg-premium-demo.mp4)
 
-**Product promise:** Given authorized synthetic evidence, create one explainable shared review for a qualifying team; otherwise hold or suppress it. Each configured recipient has exactly one selected test channel, and duplicate evaluation does not create duplicate candidates or successful sends.
+**[Watch the walkthrough](docs/media/video/convex-plg-premium-demo.mp4)** · The preview above follows a synthetic team from early momentum to a customer-ready reply. Nothing in the demo is sent to a customer.
 
-**Verification tier:** Tier 3. The path combines normalized evidence, policy evaluation, persistence, concurrent deduplication, test-only delivery/retry, and a real-time operator view.
+## Why this exists
 
-**Real entry path:** Load one fixture → normalize/evaluate → persist candidate and recipient delivery targets → test-only delivery attempt → query the candidate/evidence/attempt state.
+A product-led company often notices meaningful activity too late, or reacts to a noisy signal too early. This prototype asks a more useful question:
 
-**Required proof:** All 24 policy fixtures, duplicate race, simulated delivery outage/recovery, and a 10× workload. Tests must prove candidate, owner, target, and attempt outputs; later, the Convex path must prove the same behavior through the actual backend.
+> **What should we do next for this team, and what evidence supports that choice?**
 
-**Approved exclusions:** real customer data; customer app/end-user data; secrets; production project; live Slack/email/outreach; any claim of cross-customer internal access.
+Instead of producing a generic lead score, the system creates one shared team review. It shows what changed, recommends the appropriate human response, identifies the responsible person, and keeps the reasoning visible.
 
-## Source specifications
+This is a portfolio prototype for the GTM Engineer problem space. It is deliberately built with labeled synthetic teams and test-only delivery so that the product logic, safety rules, and operating model can be evaluated without claiming access to real Convex customer data.
 
-The V1 General Specification, V1 Decision Policy and Data Contract, and Data Access Discovery Brief remain in the author’s separate research-notes folder and are not included in this repository. The important boundaries are summarized above; external readers should receive those documents separately if needed.
+## What the reviewer should notice
 
-## Run the synthetic sandbox
+- **The policy is explainable.** Every queued team has plain-language evidence rather than an opaque score.
+- **The system distinguishes interest from urgency.** Early team momentum is worth watching; sustained pressure or an explicit enterprise request is a reason to act.
+- **The response stays human.** The app prepares a customer-facing reply and a delivery preview. It does not send email or Slack messages.
+- **The system is designed for operational reality.** It records decisions, prevents duplicate cases, preserves recipient choices, handles a simulated delivery failure, and protects suppressed or already-owned teams.
+
+## How a team moves through the system
+
+```mermaid
+flowchart LR
+  A[Approved synthetic evidence] --> B{Safety and quality checks}
+  B -->|missing, stale, or suppressed| C[Hold or suppress]
+  B -->|eligible| D{What changed?}
+  D -->|momentum only| E[Observe]
+  D -->|sustained pressure| F[Review commercial play]
+  D -->|enterprise request| G[Assign technical response]
+  E --> H[One shared team review]
+  F --> H
+  G --> H
+  H --> I[Human decision and customer-reply draft]
+  I --> J[Test-only delivery preview and history]
+```
+
+### The decision rules, in plain English
+
+Before a team can appear in the queue, the prototype requires:
+
+1. a confirmed team identity and authorized source records;
+2. a current production deployment and evidence that more than one person is involved;
+3. three complete, team-attributed days of usage; and
+4. no no-contact request, partner-managed relationship, existing owner/open case, or active cooldown.
+
+Once those foundations are present, the review is routed by the strongest current signal:
+
+| Situation | Recommendation | Intended human response |
+| --- | --- | --- |
+| Healthy momentum, but no urgent need | **Observe** | Keep an eye on the team without premature outreach. |
+| Sustained pressure against a confirmed team limit | **Review commercial play** | Decide whether plan or scaling support would be useful. |
+| An open, authorized security, SSO, legal, procurement, contract, or similar request | **Assign technical response** | Prepare a helpful technical reply and route it to the right owner. |
+| Both pressure and a direct request | **Assign technical response** | Treat the direct request as urgent while retaining the pressure evidence. |
+
+If an emerging team later develops pressure or makes a direct request, the existing review is upgraded rather than duplicated.
+
+## What is actually built
+
+The app is a React interface backed by Convex. The live local path is:
+
+1. Load a labeled fixture.
+2. Evaluate the policy and persist the review, evidence, recipient targets, and history.
+3. Show the review in a real-time queue.
+4. Let a reviewer prepare a reply, pause the team, or suppress it with an explanation.
+5. Record a test-only delivery outcome and recovery history.
+
+The backend keeps separate records for teams, evidence, evaluations, reviews, recipient targets, delivery attempts, and team-level policy state. This makes the decision inspectable and helps prevent an upgrade, retry, or duplicate event from silently creating a second case.
+
+## Safety boundary
+
+This project does **not** use real customer, application, or end-user data. It does **not** ingest or display customer application code, databases, schemas, documents, environment values, or secrets. It does **not** send real Slack, email, or outreach.
+
+Those boundaries are intentional. A real rollout would need approved data sources, field definitions, permitted-use and retention decisions, least-privilege access, an authoritative owner/no-contact check, and explicit approval for each live delivery channel. The prototype is evidence that the policy and workflow can be exercised safely — not evidence that those production approvals already exist.
+
+## Run it locally
 
 ```sh
 npm install
 npm test
 ```
 
-That runs the in-memory policy controls. For the app and actual local Convex path, use two terminals:
+To use the full local app, start Convex and the web app in separate terminals:
 
 ```sh
-# Terminal 1: local Convex backend and function watcher
 npx convex dev
-
-# Terminal 2: Vite app
 npm run dev
 ```
 
-With the local backend running, run the persisted verification in a third terminal:
+Then open the local URL shown by Vite. The **Sandbox playground** loads clearly labeled fake scenarios; choose an option, open a team, and select **Prepare response** to see the customer-reply draft.
+
+### Useful checks
 
 ```sh
-npm run verify:local
-```
-
-The runner writes only tagged synthetic test records and keeps them out of the demo queue. It verifies all 24 P/F/E fixtures plus route upgrades, Observe feedback, recipient snapshot stability, a five-way duplicate race, simulated outage/recovery, and a 10× workload through the local Convex database. Its final JSON output includes a run ID you can use when reviewing the terminal output.
-
-To reset the visible demo safely to its documented empty baseline, run:
-
-```sh
+# Reset only visible demo records; unrelated test records remain untouched.
 npm run verify:demo-reset
+
+# Exercise the persisted local Convex path across all fixtures and controls.
+npm run verify:local
+
+# Run policy/unit tests, type checking, and a production build.
+npm test
+npm run check
+npm run build
 ```
 
-The app's demo seed path writes only records labelled `demo:default`; the reset deletes only that allowlisted label and rejects other scopes. It is safe to run twice. Tagged verification runs (`test:<run>`) are intentionally preserved, and the reset does not clear unrelated local data.
+The persisted verification covers 24 fixtures, route upgrades, recipient snapshots, a five-way duplicate race, simulated failure and recovery, and a ten-times workload. The delivery test records synthetic outcomes only; it never connects to Slack or email.
 
-## Portfolio artifact status
+## Project map
 
-- Primary portfolio demo: `docs/media/video/convex-plg-premium-demo.mp4` (captioned, 46 seconds, high-bitrate Full HD, synthetic data only).
-- Backup interaction proof: `docs/media/video/convex-plg-proof.webm`. A narrated 2–3 minute walkthrough has not been recorded.
-- Screenshots/GIF: six sanitized screenshots captured in `docs/media/screenshots/`; a polished GIF is still optional.
-- Convex dashboard: local backend and synthetic tables confirmed; account/dashboard proof is not confirmed.
-- Demo storyboard and introduction: prepared in `docs/demo-storyboard.md` and `docs/portfolio-introduction.md`.
+| Where to look | Why it matters |
+| --- | --- |
+| [`src/App.tsx`](src/App.tsx) | The reviewer queue, evidence drawer, reply draft, and delivery preview. |
+| [`src/policy.ts`](src/policy.ts) | The readable, deterministic rules behind each recommendation. |
+| [`src/fixtures.ts`](src/fixtures.ts) | Labeled scenarios for normal, hold, suppression, upgrade, and edge cases. |
+| [`convex/reviews.ts`](convex/reviews.ts) | The persisted Convex workflow and safe demo reset. |
+| [`test/`](test) | Regression coverage for policy behavior, duplication, delivery recovery, and workload. |
+| [`docs/demo-storyboard.md`](docs/demo-storyboard.md) | A short, human-readable walkthrough of the product story. |
+| [`docs/portfolio-introduction.md`](docs/portfolio-introduction.md) | A concise explanation of the project’s GTM Engineer relevance. |
 
-To inspect the data the UI reads, use:
+## Design sources and honest limitations
 
-```sh
-npx convex run reviews:listCandidates '{}'
-```
+The build follows a V1 design for an explainable named-team review: confirmed identity, production momentum, shared adoption, complete usage, direct intent or pressure, and clear stop conditions. The detailed research notes are intentionally kept outside this shareable repository because they include planning material rather than implementation documentation.
 
-To inspect one returned team case in full, pass its candidate ID to `reviews:getCandidateDetails`. The delivery action records only `simulated_test_outage` or `succeeded`; it makes no Slack, email, or other network delivery.
+The prototype implements the policy with synthetic fixtures, including the emerging-team route and upgrades into urgent routes. It has **not** been production-verified. A future production system would need to complete its source-access, privacy, security, and delivery approvals before using real named-team information or contacting anyone.
+
+## Technology
+
+- React + TypeScript + Vite
+- Convex database, queries, mutations, and scheduled test-only delivery work
+- Vitest for policy and sandbox regression tests
