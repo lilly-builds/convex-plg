@@ -1,136 +1,120 @@
-# Convex Product-Led Growth Signal Review
+# Help the right team at the right moment
 
-> A small, explainable decision system for turning team-level product signals into the next **human** response — without pretending that a score, a dashboard, or an automated message is a relationship.
+## A product-led growth decision tool for Convex
 
 [![Watch the product walkthrough](docs/media/gif/convex-plg-ship-it.gif)](docs/media/video/convex-plg-premium-demo.mp4)
 
-**[Watch the walkthrough](docs/media/video/convex-plg-premium-demo.mp4)** · The preview above follows a synthetic team from early momentum to a customer-ready reply. Nothing in the demo is sent to a customer.
+**[Watch the walkthrough](docs/media/video/convex-plg-premium-demo.mp4)**
 
-## Why this exists
+## The promise
 
-A product-led company often notices meaningful activity too late, or reacts to a noisy signal too early. This prototype asks a more useful question:
+> **As a Marketing decision-maker, when a Convex team shows credible signs that it is becoming serious, I want one clear review that explains why it matters now and helps me choose the right human next step — so we can be useful without being premature, repetitive, or intrusive.**
 
-> **What should we do next for this team, and what evidence supports that choice?**
+This is not a lead score and it is not an automatic outreach machine.
 
-Instead of producing a generic lead score, the system creates one shared team review. It shows what changed, recommends the appropriate human response, identifies the responsible person, and keeps the reasoning visible.
+It is a calm place to answer one practical question:
 
-This is a portfolio prototype for the GTM Engineer problem space. It is deliberately built with labeled synthetic teams and test-only delivery so that the product logic, safety rules, and operating model can be evaluated without claiming access to real Convex customer data.
+> **What should Convex do for this team next, and why?**
 
-## What the reviewer should notice
+## The story
 
-- **The policy is explainable.** Every queued team has plain-language evidence rather than an opaque score.
-- **The system distinguishes interest from urgency.** Early team momentum is worth watching; sustained pressure or an explicit enterprise request is a reason to act.
-- **The response stays human.** The app prepares a customer-facing reply and a delivery preview. It does not send email or Slack messages.
-- **The system is designed for operational reality.** It records decisions, prevents duplicate cases, preserves recipient choices, handles a simulated delivery failure, and protects suppressed or already-owned teams.
+A small team can start using Convex quietly. That is normal. They might be trying an idea, shipping a new feature, or learning the product.
 
-## How a team moves through the system
+Then something changes. The project is in production. More people join. Usage stays meaningful over time. Maybe the team is pushing against a real limit. Maybe someone asks about SSO, security, a contract, or procurement.
 
-```mermaid
-flowchart LR
-  A[Approved synthetic evidence] --> B{Safety and quality checks}
-  B -->|missing, stale, or suppressed| C[Hold or suppress]
-  B -->|eligible| D{What changed?}
-  D -->|momentum only| E[Observe]
-  D -->|sustained pressure| F[Review commercial play]
-  D -->|enterprise request| G[Assign technical response]
-  E --> H[One shared team review]
-  F --> H
-  G --> H
-  H --> I[Human decision and customer-reply draft]
-  I --> J[Test-only delivery preview and history]
-```
+That is the moment this tool is built for.
 
-### The decision rules, in plain English
+Rather than dumping raw activity into a spreadsheet or sending an automatic sales message, it creates **one shared review** for the people at Convex who need to make a thoughtful call. The review shows the evidence, recommends the next move, and keeps the decision human.
 
-Before a team can appear in the queue, the prototype requires:
+## What a reviewer can do
 
-1. a confirmed team identity and authorized source records;
-2. a current production deployment and evidence that more than one person is involved;
-3. three complete, team-attributed days of usage; and
-4. no no-contact request, partner-managed relationship, existing owner/open case, or active cooldown.
+### See why a team appeared
 
-Once those foundations are present, the review is routed by the strongest current signal:
+Every review uses plain language. A reviewer can see whether the team has a real production app, whether the work is spreading across people, and what changed recently.
 
-| Situation | Recommendation | Intended human response |
-| --- | --- | --- |
-| Healthy momentum, but no urgent need | **Observe** | Keep an eye on the team without premature outreach. |
-| Sustained pressure against a confirmed team limit | **Review commercial play** | Decide whether plan or scaling support would be useful. |
-| An open, authorized security, SSO, legal, procurement, contract, or similar request | **Assign technical response** | Prepare a helpful technical reply and route it to the right owner. |
-| Both pressure and a direct request | **Assign technical response** | Treat the direct request as urgent while retaining the pressure evidence. |
+### Tell early momentum from an urgent moment
 
-If an emerging team later develops pressure or makes a direct request, the existing review is upgraded rather than duplicated.
+| What is happening | What the team at Convex should do |
+| --- | --- |
+| The team is growing steadily, but has not asked for help | **Observe.** Do not turn healthy adoption into unwanted outreach. |
+| The team is running into sustained, confirmed capacity pressure | **Review the commercial play.** Decide whether help with scale or plan choice would be useful. |
+| The team asks an enterprise-style question — for example about SSO, security, legal, or procurement | **Assign a technical response.** Make sure the right person can help quickly. |
 
-## What is actually built
+### Make one decision, together
 
-The app is a React interface backed by Convex. The live local path is:
+A team receives one shared review, even if several people at Convex need to see it. If the team later reaches a more urgent moment, the original review is updated rather than duplicated.
 
-1. Load a labeled fixture.
-2. Evaluate the policy and persist the review, evidence, recipient targets, and history.
-3. Show the review in a real-time queue.
-4. Let a reviewer prepare a reply, pause the team, or suppress it with an explanation.
-5. Record a test-only delivery outcome and recovery history.
+The reviewer can pause a team, mark it as already owned, or suppress it when contact would be inappropriate. When a response is appropriate, the tool prepares a **customer-facing draft** — not an internal to-do list.
 
-The backend keeps separate records for teams, evidence, evaluations, reviews, recipient targets, delivery attempts, and team-level policy state. This makes the decision inspectable and helps prevent an upgrade, retry, or duplicate event from silently creating a second case.
+## What this deliberately does *not* do
 
-## Safety boundary
+- It does not contact a customer automatically.
+- It does not turn incomplete or uncertain information into a sales signal.
+- It does not use customer code, databases, documents, secrets, or end-user information.
+- It does not claim access to Convex customer data.
+- It does not replace the existing support, commercial, or messaging tools.
 
-This project does **not** use real customer, application, or end-user data. It does **not** ingest or display customer application code, databases, schemas, documents, environment values, or secrets. It does **not** send real Slack, email, or outreach.
+The demo uses clearly labeled made-up teams and test-only delivery. That lets the decision rules be tested without pretending that real customer access or permission already exists.
 
-Those boundaries are intentional. A real rollout would need approved data sources, field definitions, permitted-use and retention decisions, least-privilege access, an authoritative owner/no-contact check, and explicit approval for each live delivery channel. The prototype is evidence that the policy and workflow can be exercised safely — not evidence that those production approvals already exist.
+## Try the demo
 
-## Run it locally
+1. Start the local app.
+2. Choose a scenario in the **Sandbox playground**.
+3. Open a team review.
+4. Read the evidence and choose **Prepare response**.
+5. See the customer draft and the test-only delivery preview.
 
 ```sh
 npm install
-npm test
+npx convex dev
 ```
 
-To use the full local app, start Convex and the web app in separate terminals:
+In a second terminal:
 
 ```sh
-npx convex dev
 npm run dev
 ```
 
-Then open the local URL shown by Vite. The **Sandbox playground** loads clearly labeled fake scenarios; choose an option, open a team, and select **Prepare response** to see the customer-reply draft.
+Open the local address shown in the terminal. No real message will be sent.
 
-### Useful checks
+## How I made it trustworthy
+
+The user experience is simple because the guardrails are not.
+
+- A team must have confirmed identity, real production activity, evidence of shared adoption, and complete usage history before it can be reviewed.
+- A no-contact request, partner-managed relationship, existing owner, open case, or cooldown stops the review.
+- The same team cannot become several competing reviews when several events arrive at once.
+- A simulated delivery failure stays visible and recovers once without creating a duplicate success.
+- Every decision leaves a history that can be reviewed later.
+
+The project includes scenarios for successful cases, missing or weak evidence, suppressions, route upgrades, duplicate events, delivery recovery, and heavier load.
+
+## For people who want to look under the hood
+
+The app uses React and Convex. The policy is written as readable, deterministic rules rather than a black-box score.
+
+| Start here | What you will find |
+| --- | --- |
+| [`src/App.tsx`](src/App.tsx) | The review queue, evidence view, customer-reply draft, and delivery preview. |
+| [`src/policy.ts`](src/policy.ts) | The rules for what qualifies, what is held, and what is suppressed. |
+| [`src/fixtures.ts`](src/fixtures.ts) | The made-up scenarios used to prove normal and edge-case behavior. |
+| [`convex/reviews.ts`](convex/reviews.ts) | The saved review, evidence, decisions, and safe demo reset. |
+| [`test/`](test) | Checks for decision quality, duplicate prevention, delivery recovery, and workload. |
+
+Useful local checks:
 
 ```sh
-# Reset only visible demo records; unrelated test records remain untouched.
-npm run verify:demo-reset
-
-# Exercise the persisted local Convex path across all fixtures and controls.
-npm run verify:local
-
-# Run policy/unit tests, type checking, and a production build.
 npm test
 npm run check
 npm run build
+npm run verify:demo-reset
+npm run verify:local
 ```
 
-The persisted verification covers 24 fixtures, route upgrades, recipient snapshots, a five-way duplicate race, simulated failure and recovery, and a ten-times workload. The delivery test records synthetic outcomes only; it never connects to Slack or email.
+The last two commands exercise the saved local workflow. They reset only demo data and run the full scenario pack without contacting Slack, email, or another outside service.
 
-## Project map
+## What would need to happen before this could be real
 
-| Where to look | Why it matters |
-| --- | --- |
-| [`src/App.tsx`](src/App.tsx) | The reviewer queue, evidence drawer, reply draft, and delivery preview. |
-| [`src/policy.ts`](src/policy.ts) | The readable, deterministic rules behind each recommendation. |
-| [`src/fixtures.ts`](src/fixtures.ts) | Labeled scenarios for normal, hold, suppression, upgrade, and edge cases. |
-| [`convex/reviews.ts`](convex/reviews.ts) | The persisted Convex workflow and safe demo reset. |
-| [`test/`](test) | Regression coverage for policy behavior, duplication, delivery recovery, and workload. |
-| [`docs/demo-storyboard.md`](docs/demo-storyboard.md) | A short, human-readable walkthrough of the product story. |
-| [`docs/portfolio-introduction.md`](docs/portfolio-introduction.md) | A concise explanation of the project’s GTM Engineer relevance. |
+A real version would need named source owners, approved access, clear definitions for every field, privacy and retention approval, a reliable no-contact and ownership check, and explicit approval for every delivery channel.
 
-## Design sources and honest limitations
-
-The build follows a V1 design for an explainable named-team review: confirmed identity, production momentum, shared adoption, complete usage, direct intent or pressure, and clear stop conditions. The detailed research notes are intentionally kept outside this shareable repository because they include planning material rather than implementation documentation.
-
-The prototype implements the policy with synthetic fixtures, including the emerging-team route and upgrades into urgent routes. It has **not** been production-verified. A future production system would need to complete its source-access, privacy, security, and delivery approvals before using real named-team information or contacting anyone.
-
-## Technology
-
-- React + TypeScript + Vite
-- Convex database, queries, mutations, and scheduled test-only delivery work
-- Vitest for policy and sandbox regression tests
+That work is intentionally outside this prototype. The point here is to show a thoughtful, testable way to turn product momentum into a respectful human decision — not to pretend those approvals are already in place.
