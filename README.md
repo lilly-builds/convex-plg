@@ -2,9 +2,10 @@
 
 ## A product-led growth decision tool for Convex
 
-[![Watch the product walkthrough](docs/media/gif/convex-plg-ship-it.gif)](docs/media/video/convex-plg-premium-demo.mp4)
-
-**[Watch the walkthrough](docs/media/video/convex-plg-premium-demo.mp4)**
+<video controls muted playsinline preload="metadata" width="100%" poster="docs/media/gif/convex-plg-ship-it.gif">
+  <source src="https://raw.githubusercontent.com/lilly-builds/convex-plg/main/docs/media/video/convex-plg-premium-demo.mp4" type="video/mp4">
+  <a href="docs/media/video/convex-plg-premium-demo.mp4">Watch the product walkthrough</a>
+</video>
 
 ## The promise
 
